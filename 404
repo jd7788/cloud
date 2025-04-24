@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Clock</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <style>
+        /* Google fonts import link */
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Orbitron', sans-serif;
+            transition: all 0.4s ease;
+        }
+
+        section {
+            min-height: 100vh;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #F0F8FF;
+            padding: 0 20px;
+        }
+
+        section.dark {
+            background: #24292D;
+        }
+
+        section .container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 220px;
+            max-width: 560px;
+            width: 100%;
+            background: #fff;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            position: relative;
+        }
+
+        section.dark .container {
+            background: #323840;
+        }
+
+        section .container .icons i {
+            position: absolute;
+            right: 17px;
+            top: 17px;
+            height: 30px;
+            width: 30px;
+            background: #24292D;
+            color: #fff;
+            text-align: center;
+            line-height: 30px;
+            border-radius: 50%;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        section.dark .container .icons i {
+            background: #fff;
+            color: #323840;
+        }
+
+        .container .icons i.fa-sun {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        section.dark .container .icons i.fa-sun {
+            opacity: 1;
+            pointer-events: auto;
+            font-size: 16px;
+        }
+
+        section .container .time {
+            display: flex;
+            align-items: center;
+        }
+
+        .container .time .time-colon {
+            display: flex;
+            align-items: center;
+            position: relative;
+        }
+
+        .time .time-colon .am_pm {
+            position: absolute;
+            top: 0;
+            right: -50px;
+            font-size: 20px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        section.dark .time .time-colon .am_pm {
+            color: #fff;
+        }
+
+        .time .time-colon .time-text {
+            height: 100px;
+            width: 100px;
+            display: flex;
+            align-items: center;
+            flex-direction: column;
+            justify-content: center;
+            background: #F0F8FF;
+            border-radius: 6px;
+            box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        section.dark .time .time-colon .time-text {
+            background: #24292D;
+        }
+
+        .time .time-colon .time-text,
+        .time .time-colon .colon {
+            font-size: 35px;
+            font-weight: 600;
+        }
+
+        section.dark .time .time-text .num,
+        section.dark .time .colon {
+            color: #fff;
+        }
+
+        .time .time-colon .colon {
+            font-size: 40px;
+            margin: 0 10px;
+        }
+
+        .time .time-colon .time-text .text {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+        }
+
+        section.dark .time .time-colon .text {
+            color: #fff;
+        }
+    </style>
+</head>
+
+<body>
+    <section>
+        <div class="container">
+            <div class="icons">
+                <i class="fa-solid fa-moon"></i>
+                <i class="fa-solid fa-sun"></i>
+            </div>
+            <div class="time">
+                <div class="time-colon">
+                    <div class="time-text">
+                        <span class="num" id="hours">00</span>
+                        <span class="text">Hours</span>
+                    </div>
+                    <span class="colon">:</span>
+                </div>
+                <div class="time-colon">
+                    <div class="time-text">
+                        <span class="num" id="minutes">00</span>
+                        <span class="text">Minutes</span>
+                    </div>
+                    <span class="colon">:</span>
+                </div>
+                <div class="time-colon">
+                    <div class="time-text">
+                        <span class="num" id="seconds">00</span>
+                        <span class="text">Seconds</span>
+                    </div>
+                    <span class="am_pm" id="am-pm">AM</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <script>
+        const section = document.querySelector('section');
+        const icons = document.querySelector('.icons');
+        const moonIcon = icons.querySelector('.fa-moon');
+        const sunIcon = icons.querySelector('.fa-sun');
+        const hoursElement = document.getElementById('hours');
+        const minutesElement = document.getElementById('minutes');
+        const secondsElement = document.getElementById('seconds');
+        const amPmElement = document.getElementById('am-pm');
+
+        function updateTime() {
+            const now = new Date();
+            let hours = now.getHours();
+            const minutes = now.getMinutes();
+            const seconds = now.getSeconds();
+            const amPm = hours >= 12 ? 'PM' : 'AM';
+
+            hours = hours % 12;
+            hours = hours ? hours : 12;
+
+            hoursElement.textContent = String(hours).padStart(2, '0');
+            minutesElement.textContent = String(minutes).padStart(2, '0');
+            secondsElement.textContent = String(seconds).padStart(2, '0');
+            amPmElement.textContent = amPm;
+        }
+
+        setInterval(updateTime, 1000);
+        updateTime();
+
+        icons.addEventListener('click', () => {
+            section.classList.toggle('dark');
+            moonIcon.classList.toggle('active');
+            sunIcon.classList.toggle('active');
+        });
+    </script>
+</body>
+
+</html>
+    
